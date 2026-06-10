@@ -1,7 +1,8 @@
 -- =============================================================
 -- DAB Enterprise — Store Management System
--- Full Database Schema v2.0
+-- Full Database Schema v3.0
 -- Tables: users, items, suppliers, stockin, stockout
+-- Roles: admin (full), staff (insert only), manager (read+insert), storekeeper (insert only)
 -- =============================================================
 
 CREATE DATABASE IF NOT EXISTS `sms`
@@ -17,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id`         INT(11)      NOT NULL AUTO_INCREMENT,
   `username`   VARCHAR(100) NOT NULL,
   `password`   VARCHAR(255) NOT NULL,
-  `role`       ENUM('admin','staff') NOT NULL DEFAULT 'staff',
+  `role`       ENUM('admin','staff','manager','storekeeper') NOT NULL DEFAULT 'staff',
   `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_username` (`username`)
@@ -56,17 +57,17 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- 4. STOCK IN  (linked to items, suppliers, users)
 -- =============================================================
 CREATE TABLE IF NOT EXISTS `stockin` (
-  `id`             INT(11)  NOT NULL AUTO_INCREMENT,
-  `item_id`        INT(11)  NOT NULL,
-  `itemname`       VARCHAR(150) NOT NULL,          -- denormalized for fast display
-  `description`    TEXT         DEFAULT NULL,
-  `quantityin`     INT(11)  NOT NULL,
-  `totalquantityin` INT(11) NOT NULL DEFAULT 0,
-  `supplier_id`    INT(11)  DEFAULT NULL,
-  `suppliername`   VARCHAR(150) DEFAULT NULL,      -- denormalized for fast display
-  `stockindate`    DATE     NOT NULL,
-  `user_id`        INT(11)  NOT NULL,
-  `created_at`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id`              INT(11)      NOT NULL AUTO_INCREMENT,
+  `item_id`         INT(11)      NOT NULL,
+  `itemname`        VARCHAR(150) NOT NULL,
+  `description`     TEXT         DEFAULT NULL,
+  `quantityin`      INT(11)      NOT NULL,
+  `totalquantityin` INT(11)      NOT NULL DEFAULT 0,
+  `supplier_id`     INT(11)      DEFAULT NULL,
+  `suppliername`    VARCHAR(150) DEFAULT NULL,
+  `stockindate`     DATE         NOT NULL,
+  `user_id`         INT(11)      NOT NULL,
+  `created_at`      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_item_id`     (`item_id`),
   KEY `idx_supplier_id` (`supplier_id`),
@@ -82,14 +83,14 @@ CREATE TABLE IF NOT EXISTS `stockin` (
 -- 5. STOCK OUT  (linked to items, users)
 -- =============================================================
 CREATE TABLE IF NOT EXISTS `stockout` (
-  `id`              INT(11)  NOT NULL AUTO_INCREMENT,
-  `item_id`         INT(11)  NOT NULL,
-  `itemname`        VARCHAR(150) NOT NULL,         -- denormalized
-  `quantityout`     INT(11)  NOT NULL,
-  `totalquantityout` INT(11) NOT NULL DEFAULT 0,
-  `stockoutdate`    DATE     NOT NULL,
-  `user_id`         INT(11)  NOT NULL,
-  `created_at`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id`               INT(11)      NOT NULL AUTO_INCREMENT,
+  `item_id`          INT(11)      NOT NULL,
+  `itemname`         VARCHAR(150) NOT NULL,
+  `quantityout`      INT(11)      NOT NULL,
+  `totalquantityout` INT(11)      NOT NULL DEFAULT 0,
+  `stockoutdate`     DATE         NOT NULL,
+  `user_id`          INT(11)      NOT NULL,
+  `created_at`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_item_id_so`   (`item_id`),
   KEY `idx_user_id_so`   (`user_id`),
@@ -102,10 +103,10 @@ CREATE TABLE IF NOT EXISTS `stockout` (
 -- SEED DATA
 -- =============================================================
 
--- Admin user  (password: admin123)
+-- Users (admin/admin123, staff/staff123)
 INSERT IGNORE INTO `users` (`username`, `password`, `role`) VALUES
-  ('admin', '$2b$10$UgwujR.V60H0ZRSpj.zuru5/oDFJCzXQ7pEEV44jSjIqR8IMlgStK', 'admin'),
-  ('staff', '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'staff');
+  ('admin',       '$2b$10$UgwujR.V60H0ZRSpj.zuru5/oDFJCzXQ7pEEV44jSjIqR8IMlgStK', 'admin'),
+  ('staff',       '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'staff');
 
 -- Suppliers
 INSERT IGNORE INTO `suppliers` (`name`, `contact_person`, `phone`, `email`, `address`) VALUES

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const db = require('../db/connection');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requireAdmin, ALLOWED_ROLES } = require('../middleware/auth');
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
@@ -44,7 +44,7 @@ router.get('/me', (req, res) => {
   return res.status(401).json({ message: 'Not authenticated.' });
 });
 
-// POST /api/auth/reset-password — reset password by username
+// POST /api/auth/reset-password
 router.post('/reset-password', async (req, res) => {
   const { username, newPassword } = req.body;
   if (!username || !newPassword)
@@ -64,16 +64,21 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-// POST /api/auth/register  (admin only)
+// POST /api/auth/register  (admin only) — create a new user
 router.post('/register', requireAdmin, async (req, res) => {
   const { username, password, role } = req.body;
   if (!username || !password)
     return res.status(400).json({ message: 'Username and password required.' });
+  if (password.length < 6)
+    return res.status(400).json({ message: 'Password must be at least 6 characters.' });
+
+  const assignedRole = role && ALLOWED_ROLES.includes(role) ? role : 'staff';
+
   try {
     const hashed = await bcrypt.hash(password, 10);
     await db.query(
       'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-      [username, hashed, role || 'staff']
+      [username.trim(), hashed, assignedRole]
     );
     return res.status(201).json({ message: 'User created successfully.' });
   } catch (err) {
@@ -84,10 +89,12 @@ router.post('/register', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/auth/users - list all users
+// GET /api/auth/users — list all users (any authenticated user can view)
 router.get('/users', requireAuth, async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT id, username, role, created_at FROM users ORDER BY created_at DESC');
+    const [rows] = await db.query(
+      'SELECT id, username, role, created_at FROM users ORDER BY created_at DESC'
+    );
     return res.json(rows);
   } catch (err) {
     console.error(err);
@@ -95,30 +102,32 @@ router.get('/users', requireAuth, async (req, res) => {
   }
 });
 
-// DELETE /api/auth/users/:id
-router.delete('/users/:id', requireAdmin, async (req, res) => {
+// GET /api/auth/users/:id — get a single user (admin only)
+router.get('/users/:id', requireAdmin, async (req, res) => {
   try {
-    // Check if record exists
-    const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [req.params.id]);
-    if (existing.length === 0) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-    await db.query('DELETE FROM users WHERE id = ?', [req.params.id]);
-    return res.json({ message: 'User deleted.' });
+    const [rows] = await db.query(
+      'SELECT id, username, role, created_at FROM users WHERE id = ?',
+      [req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ message: 'User not found.' });
+    return res.json(rows[0]);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Server error.' });
   }
 });
 
-// PUT /api/auth/users/:id — update username, role, and optionally password
+// PUT /api/auth/users/:id — update user (admin only)
 router.put('/users/:id', requireAdmin, async (req, res) => {
   const { username, role, password } = req.body;
   const { id } = req.params;
+
   if (!username || !role)
     return res.status(400).json({ message: 'Username and role are required.' });
+  if (!ALLOWED_ROLES.includes(role))
+    return res.status(400).json({ message: `Invalid role. Allowed: ${ALLOWED_ROLES.join(', ')}.` });
+
   try {
-    // Check if user exists
     const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
     if (existing.length === 0)
       return res.status(404).json({ message: 'User not found.' });
@@ -129,18 +138,38 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
       const hashed = await bcrypt.hash(password, 10);
       await db.query(
         'UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?',
-        [username, role, hashed, id]
+        [username.trim(), role, hashed, id]
       );
     } else {
       await db.query(
         'UPDATE users SET username = ?, role = ? WHERE id = ?',
-        [username, role, id]
+        [username.trim(), role, id]
       );
     }
     return res.json({ message: 'User updated successfully.' });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY')
       return res.status(409).json({ message: 'Username already taken.' });
+    console.error(err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+// DELETE /api/auth/users/:id (admin only)
+router.delete('/users/:id', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Prevent deleting yourself
+    if (String(req.session.user.id) === String(id))
+      return res.status(400).json({ message: 'You cannot delete your own account.' });
+
+    const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
+    if (existing.length === 0)
+      return res.status(404).json({ message: 'User not found.' });
+
+    await db.query('DELETE FROM users WHERE id = ?', [id]);
+    return res.json({ message: 'User deleted.' });
+  } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Server error.' });
   }

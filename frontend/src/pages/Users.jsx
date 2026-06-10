@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 
 const emptyForm = { username: '', password: '', role: 'staff' };
 
 const ROLE_OPTIONS = [
-  { value: 'staff',      label: 'Staff',      color: '#45885e' },
-  { value: 'admin',      label: 'Admin',      color: '#1e40af' },
-  { value: 'manager',    label: 'Manager',    color: '#6b5d83' },
-  { value: 'storekeeper',label: 'Storekeeper',color: '#0b6177' },
+  { value: 'admin',       label: 'Admin',       desc: 'Full system access',        color: '#1e40af' },
+  { value: 'manager',     label: 'Manager',     desc: 'Manage records & products', color: '#6b21a8' },
+  { value: 'staff',       label: 'Staff',       desc: 'View & add records',        color: '#065f46' },
+  { value: 'storekeeper', label: 'Storekeeper', desc: 'Stock-in & stock-out only', color: '#0b6177' },
 ];
 
 const roleColor = role => ROLE_OPTIONS.find(r => r.value === role)?.color || '#64748b';
@@ -29,11 +30,7 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
 
   useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
 
-  const close = () => {
-    setVisible(false);
-    setTimeout(onClose, 240);
-  };
-
+  const close = () => { setVisible(false); setTimeout(onClose, 240); };
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
@@ -57,11 +54,14 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
   };
 
   return (
-    <div className={`um-overlay ${visible ? 'um-overlay--in' : ''}`} onMouseDown={e => e.target === e.currentTarget && close()}>
+    <div className={`um-overlay ${visible ? 'um-overlay--in' : ''}`}
+      onMouseDown={e => e.target === e.currentTarget && close()}>
       <div className={`um-modal ${visible ? 'um-modal--in' : ''}`}>
+
         {/* Header */}
-        <div className="um-modal-header" style={{ background: isEdit ? 'linear-gradient(135deg,#1e1b4b,#312e81)' : 'linear-gradient(135deg,#0f172a,#1e3a5f)' }}>
-          <div className="um-modal-icon">{isEdit ? '' : ''}</div>
+        <div className="um-modal-header"
+          style={{ background: isEdit ? 'linear-gradient(135deg,#1e1b4b,#312e81)' : 'linear-gradient(135deg,#0f172a,#1e3a5f)' }}>
+          <div className="um-modal-icon">{isEdit ? '✏️' : '👤'}</div>
           <div>
             <h2 className="um-modal-title">{isEdit ? 'Edit User' : 'Create New User'}</h2>
             <p className="um-modal-sub">{isEdit ? `Updating: ${initial.username}` : 'Add a new system account'}</p>
@@ -71,39 +71,30 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="um-form">
+
           {/* Username */}
           <div className="um-field">
             <label className="um-label">Username <span className="um-required">*</span></label>
-            <input
-              className="um-input"
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-              required
-              placeholder="Enter username"
-              autoComplete="off"
-            />
+            <input className="um-input" name="username" type="text"
+              value={form.username} onChange={handleChange}
+              required placeholder="Enter username" autoComplete="off" />
           </div>
 
           {/* Password */}
           <div className="um-field">
             <label className="um-label">
-              {isEdit ? 'New Password' : 'Password'} {!isEdit && <span className="um-required">*</span>}
+              {isEdit ? 'New Password' : 'Password'}{' '}
+              {!isEdit && <span className="um-required">*</span>}
               {isEdit && <span className="um-hint"> (leave blank to keep current)</span>}
             </label>
             <div className="um-pwd-wrap">
-              <input
-                className="um-input"
-                name="password"
+              <input className="um-input" name="password"
                 type={showPwd ? 'text' : 'password'}
-                value={form.password}
-                onChange={handleChange}
+                value={form.password} onChange={handleChange}
                 required={!isEdit}
                 placeholder={isEdit ? '••••••  (optional)' : 'Min 6 characters'}
                 minLength={isEdit ? undefined : 6}
-                autoComplete="new-password"
-              />
+                autoComplete="new-password" />
               <button type="button" className="um-eye" onClick={() => setShowPwd(s => !s)}>
                 <EyeIcon show={showPwd} />
               </button>
@@ -115,21 +106,16 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
             <label className="um-label">Role</label>
             <div className="um-role-grid">
               {ROLE_OPTIONS.map(r => (
-                <label
-                  key={r.value}
+                <label key={r.value}
                   className={`um-role-card ${form.role === r.value ? 'selected' : ''}`}
-                  style={{ '--rc': r.color }}
-                >
-                  <input
-                    type="radio"
-                    name="role"
-                    value={r.value}
-                    checked={form.role === r.value}
-                    onChange={handleChange}
-                    hidden
-                  />
+                  style={{ '--rc': r.color }}>
+                  <input type="radio" name="role" value={r.value}
+                    checked={form.role === r.value} onChange={handleChange} hidden />
                   <span className="um-role-dot" />
-                  <span className="um-role-name">{r.label}</span>
+                  <div style={{ flex: 1 }}>
+                    <span className="um-role-name">{r.label}</span>
+                    <span style={{ fontSize: 11, color: '#64748b', display: 'block' }}>{r.desc}</span>
+                  </div>
                   {form.role === r.value && <span className="um-role-check">✓</span>}
                 </label>
               ))}
@@ -142,7 +128,7 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
             <button type="submit" className="um-btn-submit" disabled={loading}>
               {loading
                 ? <><span className="btn-spinner" /> {isEdit ? 'Saving…' : 'Creating…'}</>
-                : isEdit ? ' Save Changes' : ' Create User'
+                : isEdit ? '✅ Save Changes' : '✅ Create User'
               }
             </button>
           </div>
@@ -152,11 +138,37 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
   );
 };
 
+/* ── Confirm Delete Dialog ──────────────────────────────────── */
+const ConfirmDeleteDialog = ({ user: targetUser, onConfirm, onCancel }) => {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
+  const close = cb => { setVisible(false); setTimeout(cb, 220); };
+  return (
+    <div className={`um-overlay ${visible ? 'um-overlay--in' : ''}`}
+      onMouseDown={e => e.target === e.currentTarget && close(onCancel)}>
+      <div className={`confirm-dialog ${visible ? 'um-modal--in' : ''}`}>
+        <div className="confirm-icon">🗑️</div>
+        <h3 className="confirm-title">Delete User?</h3>
+        <p className="confirm-msg">
+          This will permanently delete <strong>{targetUser.username}</strong><br />
+          <span style={{ color: '#64748b', fontSize: 13 }}>Role: {roleLabel(targetUser.role)}</span>
+        </p>
+        <div className="confirm-actions">
+          <button className="um-btn-cancel" onClick={() => close(onCancel)}>Cancel</button>
+          <button className="confirm-btn-delete" onClick={() => close(onConfirm)}>Yes, Delete</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ══════════════════════════════════════════════════════════════ */
 const Users = () => {
-  const [users, setUsers]       = useState([]);
-  const [modal, setModal]       = useState(null); // null | { mode:'create'|'edit', user? }
-  const [searchQ, setSearchQ]   = useState('');
+  const { user: currentUser } = useAuth();
+  const [users, setUsers]           = useState([]);
+  const [modal, setModal]           = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [searchQ, setSearchQ]       = useState('');
   const [filterRole, setFilterRole] = useState('all');
 
   const fetchUsers = async () => {
@@ -168,16 +180,17 @@ const Users = () => {
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const handleDelete = async u => {
-    if (!window.confirm(`Delete user "${u.username}"? This cannot be undone.`)) return;
+  const handleDelete = async () => {
     try {
-      await api.delete(`/auth/users/${u.id}`);
-      toast.success(`User "${u.username}" deleted.`);
+      await api.delete(`/auth/users/${deleteTarget.id}`);
+      toast.success(`User "${deleteTarget.username}" deleted.`);
       fetchUsers();
-    } catch { toast.error('Failed to delete user.'); }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete user.');
+    }
+    setDeleteTarget(null);
   };
 
-  /* Filtered list */
   const filtered = users.filter(u => {
     const matchQ = u.username.toLowerCase().includes(searchQ.toLowerCase());
     const matchR = filterRole === 'all' || u.role === filterRole;
@@ -186,7 +199,7 @@ const Users = () => {
 
   return (
     <div className="page">
-      {/* Modal */}
+      {/* Modals */}
       {modal && (
         <UserModal
           mode={modal.mode}
@@ -195,18 +208,22 @@ const Users = () => {
           onSaved={fetchUsers}
         />
       )}
+      {deleteTarget && (
+        <ConfirmDeleteDialog
+          user={deleteTarget}
+          onConfirm={handleDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
 
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title"> User Management</h1>
+          <h1 className="page-title">👥 User Management</h1>
           <p className="page-sub">Create, edit and manage system user accounts</p>
         </div>
-        <button
-          id="add-user-btn"
-          className="btn-primary"
-          onClick={() => setModal({ mode: 'create', user: { ...emptyForm } })}
-        >
+        <button id="add-user-btn" className="btn-primary"
+          onClick={() => setModal({ mode: 'create', user: { ...emptyForm } })}>
           + Add User
         </button>
       </div>
@@ -230,7 +247,6 @@ const Users = () => {
 
       {/* Table card */}
       <div className="card">
-        {/* Toolbar */}
         <div className="card-header" style={{ flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <h2 className="card-title">System Users</h2>
@@ -238,21 +254,14 @@ const Users = () => {
           </div>
           <div className="user-toolbar">
             <div className="search-wrap">
-              <span className="search-icon"></span>
-              <input
-                className="search-input"
-                type="text"
+              <span className="search-icon">🔍</span>
+              <input className="search-input" type="text"
                 placeholder="Search username…"
-                value={searchQ}
-                onChange={e => setSearchQ(e.target.value)}
-              />
+                value={searchQ} onChange={e => setSearchQ(e.target.value)} />
               {searchQ && <button className="search-clear" onClick={() => setSearchQ('')}>✕</button>}
             </div>
-            <select
-              className="role-filter"
-              value={filterRole}
-              onChange={e => setFilterRole(e.target.value)}
-            >
+            <select className="role-filter" value={filterRole}
+              onChange={e => setFilterRole(e.target.value)}>
               <option value="all">All Roles</option>
               {ROLE_OPTIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
             </select>
@@ -266,61 +275,66 @@ const Users = () => {
                 <th>#</th>
                 <th>User</th>
                 <th>Role</th>
+                <th>Permissions</th>
                 <th>Created</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} className="empty-cell">
+                <tr><td colSpan={6} className="empty-cell">
                   {searchQ || filterRole !== 'all' ? 'No users match your filters.' : 'No users found.'}
                 </td></tr>
-              ) : filtered.map((u, i) => (
-                <tr key={u.id} className="user-row">
-                  <td style={{ color: '#94a3b8', fontSize: 12 }}>{i + 1}</td>
-                  <td>
-                    <div className="user-cell">
-                      <div
-                        className="user-avatar-sm"
-                        style={{ background: `linear-gradient(135deg, ${roleColor(u.role)}, ${roleColor(u.role)}aa)` }}
-                      >
-                        {u.username[0].toUpperCase()}
+              ) : filtered.map((u, i) => {
+                const roleOpt = ROLE_OPTIONS.find(r => r.value === u.role);
+                const isSelf = String(u.id) === String(currentUser?.id);
+                return (
+                  <tr key={u.id} className="user-row">
+                    <td style={{ color: '#94a3b8', fontSize: 12 }}>{i + 1}</td>
+                    <td>
+                      <div className="user-cell">
+                        <div className="user-avatar-sm"
+                          style={{ background: `linear-gradient(135deg, ${roleColor(u.role)}, ${roleColor(u.role)}aa)` }}>
+                          {u.username[0].toUpperCase()}
+                        </div>
+                        <div>
+                          <span className="user-name-cell">{u.username}</span>
+                          {isSelf && (
+                            <span style={{ fontSize: 10, background: '#dcfce7', color: '#16a34a', padding: '1px 6px', borderRadius: 8, marginLeft: 6, fontWeight: 700 }}>
+                              You
+                            </span>
+                          )}
+                          <span className="user-id-cell">ID #{u.id}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="user-name-cell">{u.username}</span>
-                        <span className="user-id-cell">ID #{u.id}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      className="role-badge-pill"
-                      style={{ background: roleColor(u.role) + '22', color: roleColor(u.role), border: `1px solid ${roleColor(u.role)}44` }}
-                    >
-                      {roleLabel(u.role)}
-                    </span>
-                  </td>
-                  <td style={{ fontSize: 13, color: '#64748b' }}>
-                    {new Date(u.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="action-cell">
-                    <button
-                      className="btn-edit-icon"
-                      title="Edit user"
-                      onClick={() => setModal({ mode: 'edit', user: { id: u.id, username: u.username, role: u.role, password: '' } })}
-                    >
-                      
-                    </button>
-                    <button
-                      className="btn-delete"
-                      title="Delete user"
-                      onClick={() => handleDelete(u)}
-                    >
-                      
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <span className="role-badge-pill"
+                        style={{ background: roleColor(u.role) + '22', color: roleColor(u.role), border: `1px solid ${roleColor(u.role)}44` }}>
+                        {roleLabel(u.role)}
+                      </span>
+                    </td>
+                    <td style={{ fontSize: 12, color: '#64748b' }}>
+                      {roleOpt?.desc || '—'}
+                    </td>
+                    <td style={{ fontSize: 13, color: '#64748b' }}>
+                      {new Date(u.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className="action-cell">
+                      <button className="btn-edit-icon" title="Edit user"
+                        onClick={() => setModal({ mode: 'edit', user: { id: u.id, username: u.username, role: u.role, password: '' } })}>
+                        ✏️
+                      </button>
+                      <button className="btn-delete" title="Delete user"
+                        disabled={isSelf}
+                        style={isSelf ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                        onClick={() => !isSelf && setDeleteTarget(u)}>
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

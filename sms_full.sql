@@ -1,7 +1,7 @@
 -- ==============================================================
 -- DAB Enterprise — Store Management System (SMS)
 -- Full Database Dump — XAMPP / phpMyAdmin Ready
--- Version: 3.0  |  Date: 2026-06-10
+-- Version: 3.0  |  Roles: admin, manager, staff, storekeeper
 -- ==============================================================
 -- HOW TO IMPORT IN XAMPP:
 --   1. Start XAMPP → Start Apache + MySQL
@@ -35,13 +35,15 @@ DROP TABLE IF EXISTS `users`;
 
 -- ==============================================================
 -- TABLE: users
+-- Roles: admin (full), manager (full except user mgmt),
+--        staff (read + insert), storekeeper (insert only)
 -- ==============================================================
 CREATE TABLE `users` (
-  `id`         INT(11)                   NOT NULL AUTO_INCREMENT,
-  `username`   VARCHAR(100)              NOT NULL,
-  `password`   VARCHAR(255)              NOT NULL,
-  `role`       ENUM('admin','staff')     NOT NULL DEFAULT 'staff',
-  `created_at` TIMESTAMP                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id`         INT(11)                                          NOT NULL AUTO_INCREMENT,
+  `username`   VARCHAR(100)                                     NOT NULL,
+  `password`   VARCHAR(255)                                     NOT NULL,
+  `role`       ENUM('admin','manager','staff','storekeeper')    NOT NULL DEFAULT 'staff',
+  `created_at` TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -76,7 +78,7 @@ CREATE TABLE `items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ==============================================================
--- TABLE: stockin  (linked to items, suppliers, users)
+-- TABLE: stockin
 -- ==============================================================
 CREATE TABLE `stockin` (
   `id`              INT(11)      NOT NULL AUTO_INCREMENT,
@@ -102,7 +104,7 @@ CREATE TABLE `stockin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ==============================================================
--- TABLE: stockout  (linked to items, users)
+-- TABLE: stockout
 -- ==============================================================
 CREATE TABLE `stockout` (
   `id`               INT(11)      NOT NULL AUTO_INCREMENT,
@@ -125,10 +127,13 @@ CREATE TABLE `stockout` (
 -- SEED DATA
 -- ==============================================================
 
--- Users (password: admin123 for admin, staff123 for staff)
+-- Users
+-- Passwords:  admin→admin123 | manager→manager123 | staff→staff123 | store→store123
 INSERT INTO `users` (`username`, `password`, `role`) VALUES
-  ('admin', '$2b$10$UgwujR.V60H0ZRSpj.zuru5/oDFJCzXQ7pEEV44jSjIqR8IMlgStK', 'admin'),
-  ('staff', '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'staff');
+  ('admin',       '$2b$10$UgwujR.V60H0ZRSpj.zuru5/oDFJCzXQ7pEEV44jSjIqR8IMlgStK', 'admin'),
+  ('manager',     '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'manager'),
+  ('staff',       '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'staff'),
+  ('storekeeper', '$2b$10$aCU318o1IfEsjRQifOkL5uCOo6zF181rnIksbiTFS3hNQJgrepAb.', 'storekeeper');
 
 -- Suppliers
 INSERT INTO `suppliers` (`name`, `contact_person`, `phone`, `email`, `address`) VALUES
@@ -141,39 +146,38 @@ INSERT INTO `suppliers` (`name`, `contact_person`, `phone`, `email`, `address`) 
 
 -- Items (Product Catalog)
 INSERT INTO `items` (`name`, `unit`, `min_stock`, `description`) VALUES
-  ('Steel Bars',     'pieces', 20,  'Structural steel reinforcement bars'),
-  ('Wheelbarrows',   'pieces',  5,  'Construction wheelbarrows'),
-  ('Ceramic Tiles',  'boxes',  15,  '60x60 cm floor tiles'),
-  ('Cement',         'bags',   50,  'Portland cement 50kg bags'),
-  ('Painting Brush', 'pieces', 20,  'Professional paint brushes'),
-  ('Color Paint',    'gallons',10,  'Exterior weather-proof paint'),
-  ('Masonry Nail',   'boxes',  30,  '4-inch masonry nails box/1kg'),
-  ('Iron Sheet',     'pieces', 10,  'Gauge 30 iron roofing sheets');
+  ('Steel Bars',     'pieces', 20, 'Structural steel reinforcement bars'),
+  ('Wheelbarrows',   'pieces',  5, 'Construction wheelbarrows'),
+  ('Ceramic Tiles',  'boxes',  15, '60x60 cm floor tiles'),
+  ('Cement',         'bags',   50, 'Portland cement 50kg bags'),
+  ('Painting Brush', 'pieces', 20, 'Professional paint brushes'),
+  ('Color Paint',    'gallons',10, 'Exterior weather-proof paint'),
+  ('Masonry Nail',   'boxes',  30, '4-inch masonry nails box/1kg'),
+  ('Iron Sheet',     'pieces', 10, 'Gauge 30 iron roofing sheets');
 
--- Stock In records (sample data)
--- user_id=1 (admin), item_id refs above, supplier_id refs above
+-- Stock In records
 INSERT INTO `stockin` (`item_id`,`itemname`,`description`,`quantityin`,`totalquantityin`,`supplier_id`,`suppliername`,`stockindate`,`user_id`) VALUES
-  (4, 'Cement',         'First batch', 200, 200, 1, 'CIMERWA Ltd',          '2026-05-01', 1),
-  (1, 'Steel Bars',     NULL,          100, 100, 2, 'Metalco Rwanda',       '2026-05-02', 1),
-  (3, 'Ceramic Tiles',  NULL,           60,  60, 3, 'Tiles Africa Ltd',     '2026-05-03', 1),
-  (6, 'Color Paint',    NULL,           40,  40, 4, 'Paint & Deco Ltd',     '2026-05-05', 1),
-  (5, 'Painting Brush', NULL,           80,  80, 4, 'Paint & Deco Ltd',     '2026-05-06', 1),
-  (7, 'Masonry Nail',   NULL,           50,  50, 6, 'Hardware Plus Rwanda', '2026-05-07', 1),
-  (8, 'Iron Sheet',     NULL,           30,  30, 2, 'Metalco Rwanda',       '2026-05-08', 1),
-  (2, 'Wheelbarrows',   NULL,           10,  10, 6, 'Hardware Plus Rwanda', '2026-05-10', 1),
-  (4, 'Cement',         'Restock',     100, 300, 1, 'CIMERWA Ltd',          '2026-05-20', 1);
+  (4,'Cement',        'First batch', 200,200, 1,'CIMERWA Ltd',          '2026-05-01', 1),
+  (1,'Steel Bars',    NULL,          100,100, 2,'Metalco Rwanda',       '2026-05-02', 1),
+  (3,'Ceramic Tiles', NULL,           60, 60, 3,'Tiles Africa Ltd',     '2026-05-03', 1),
+  (6,'Color Paint',   NULL,           40, 40, 4,'Paint & Deco Ltd',     '2026-05-05', 1),
+  (5,'Painting Brush',NULL,           80, 80, 4,'Paint & Deco Ltd',     '2026-05-06', 1),
+  (7,'Masonry Nail',  NULL,           50, 50, 6,'Hardware Plus Rwanda', '2026-05-07', 1),
+  (8,'Iron Sheet',    NULL,           30, 30, 2,'Metalco Rwanda',       '2026-05-08', 1),
+  (2,'Wheelbarrows',  NULL,           10, 10, 6,'Hardware Plus Rwanda', '2026-05-10', 1),
+  (4,'Cement',        'Restock',     100,300, 1,'CIMERWA Ltd',          '2026-05-20', 1);
 
--- Stock Out records (sample data)
+-- Stock Out records
 INSERT INTO `stockout` (`item_id`,`itemname`,`quantityout`,`totalquantityout`,`stockoutdate`,`user_id`) VALUES
-  (4, 'Cement',         80,  80, '2026-05-10', 2),
-  (1, 'Steel Bars',     30,  30, '2026-05-12', 2),
-  (3, 'Ceramic Tiles',  20,  20, '2026-05-13', 2),
-  (6, 'Color Paint',    15,  15, '2026-05-14', 2),
-  (5, 'Painting Brush', 25,  25, '2026-05-15', 2),
-  (7, 'Masonry Nail',   40,  40, '2026-05-16', 2),
-  (8, 'Iron Sheet',     20,  20, '2026-05-17', 2),
-  (4, 'Cement',        150, 230, '2026-05-25', 2),
-  (2, 'Wheelbarrows',    8,   8, '2026-05-28', 2);
+  (4,'Cement',         80, 80,'2026-05-10', 3),
+  (1,'Steel Bars',     30, 30,'2026-05-12', 3),
+  (3,'Ceramic Tiles',  20, 20,'2026-05-13', 3),
+  (6,'Color Paint',    15, 15,'2026-05-14', 3),
+  (5,'Painting Brush', 25, 25,'2026-05-15', 3),
+  (7,'Masonry Nail',   40, 40,'2026-05-16', 3),
+  (8,'Iron Sheet',     20, 20,'2026-05-17', 3),
+  (4,'Cement',        150,230,'2026-05-25', 3),
+  (2,'Wheelbarrows',    8,  8,'2026-05-28', 3);
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -181,6 +185,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- DONE — Database "sms" is ready!
 -- ==============================================================
 -- Login credentials:
---   admin / admin123  (full access)
---   staff / staff123  (insert only)
+--   admin       / admin123   → Full system access
+--   manager     / staff123   → Manage records & products
+--   staff       / staff123   → View & add records
+--   storekeeper / staff123   → Stock-in & stock-out only
 -- ==============================================================
