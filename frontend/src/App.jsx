@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import StockIn from './pages/StockIn';
@@ -153,6 +154,7 @@ const Layout = ({ children }) => {
           <ProfileWidget />
         </header>
         <main className="content-area">{children}</main>
+        <Footer />
       </div>
     </div>
   );

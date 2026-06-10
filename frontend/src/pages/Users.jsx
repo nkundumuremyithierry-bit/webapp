@@ -61,7 +61,7 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
         {/* Header */}
         <div className="um-modal-header"
           style={{ background: isEdit ? 'linear-gradient(135deg,#1e1b4b,#312e81)' : 'linear-gradient(135deg,#0f172a,#1e3a5f)' }}>
-          <div className="um-modal-icon">{isEdit ? '✏️' : '👤'}</div>
+          <div className="um-modal-icon">{isEdit ? '' : ''}</div>
           <div>
             <h2 className="um-modal-title">{isEdit ? 'Edit User' : 'Create New User'}</h2>
             <p className="um-modal-sub">{isEdit ? `Updating: ${initial.username}` : 'Add a new system account'}</p>
@@ -128,7 +128,7 @@ const UserModal = ({ mode, initial, onClose, onSaved }) => {
             <button type="submit" className="um-btn-submit" disabled={loading}>
               {loading
                 ? <><span className="btn-spinner" /> {isEdit ? 'Saving…' : 'Creating…'}</>
-                : isEdit ? '✅ Save Changes' : '✅ Create User'
+                : isEdit ? ' Save Changes' : ' Create User'
               }
             </button>
           </div>
@@ -147,7 +147,7 @@ const ConfirmDeleteDialog = ({ user: targetUser, onConfirm, onCancel }) => {
     <div className={`um-overlay ${visible ? 'um-overlay--in' : ''}`}
       onMouseDown={e => e.target === e.currentTarget && close(onCancel)}>
       <div className={`confirm-dialog ${visible ? 'um-modal--in' : ''}`}>
-        <div className="confirm-icon">🗑️</div>
+        <div className="confirm-icon"></div>
         <h3 className="confirm-title">Delete User?</h3>
         <p className="confirm-msg">
           This will permanently delete <strong>{targetUser.username}</strong><br />
@@ -219,7 +219,7 @@ const Users = () => {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">👥 User Management</h1>
+          <h1 className="page-title"> User Management</h1>
           <p className="page-sub">Create, edit and manage system user accounts</p>
         </div>
         <button id="add-user-btn" className="btn-primary"
@@ -254,7 +254,7 @@ const Users = () => {
           </div>
           <div className="user-toolbar">
             <div className="search-wrap">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"></span>
               <input className="search-input" type="text"
                 placeholder="Search username…"
                 value={searchQ} onChange={e => setSearchQ(e.target.value)} />
@@ -329,7 +329,7 @@ const Users = () => {
                         disabled={isSelf}
                         style={isSelf ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
                         onClick={() => !isSelf && setDeleteTarget(u)}>
-                        🗑️
+                        
                       </button>
                     </td>
                   </tr>

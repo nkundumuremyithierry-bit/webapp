@@ -18,7 +18,7 @@ const ConfirmDialog = ({ record, onConfirm, onCancel }) => {
     <div className={`um-overlay ${visible ? 'um-overlay--in' : ''}`}
       onMouseDown={e => e.target === e.currentTarget && close(onCancel)}>
       <div className={`confirm-dialog ${visible ? 'um-modal--in' : ''}`}>
-        <div className="confirm-icon">🗑️</div>
+        <div className="confirm-icon"></div>
         <h3 className="confirm-title">Delete Record?</h3>
         <p className="confirm-msg">
           This will permanently remove the stock-out entry for<br />
@@ -67,7 +67,7 @@ const StockOutModal = ({ mode, initial, items, onClose, onSaved }) => {
 
         <div className="um-modal-header"
           style={{ background: isEdit ? 'linear-gradient(135deg,#7c2d12,#c2410c)' : 'linear-gradient(135deg,#1e1b4b,#4c1d95)' }}>
-          <div className="um-modal-icon">{isEdit ? '✏️' : '📤'}</div>
+          <div className="um-modal-icon">{isEdit ? '' : ''}</div>
           <div>
             <h2 className="um-modal-title">{isEdit ? 'Edit Stock-Out Record' : 'New Stock-Out'}</h2>
             <p className="um-modal-sub">{isEdit ? `Editing record #${initial.id}` : 'Record items issued from store'}</p>
@@ -104,7 +104,7 @@ const StockOutModal = ({ mode, initial, items, onClose, onSaved }) => {
             <button type="button" className="um-btn-cancel" onClick={close}>Cancel</button>
             <button type="submit" className="um-btn-submit" disabled={loading}
               style={{ background: isEdit ? 'linear-gradient(135deg,#7c2d12,#c2410c)' : 'linear-gradient(135deg,#4c1d95,#7c3aed)' }}>
-              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? '✅ Update Record' : '✅ Save Record'}
+              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? 'Update Record' : ' Save Record'}
             </button>
           </div>
         </form>
@@ -181,7 +181,7 @@ const StockOut = () => {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">📤 Stock Out</h1>
+          <h1 className="page-title"> Stock Out</h1>
           <p className="page-sub">Record and manage items issued from the store</p>
         </div>
         <button id="add-stockout-btn" className="btn-primary"

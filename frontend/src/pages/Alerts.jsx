@@ -57,22 +57,22 @@ export default function Alerts() {
           </h1>
           <p className="page-sub">Items that need immediate attention — low or out of stock</p>
         </div>
-        <button className="btn-primary" onClick={load}>🔄 Refresh</button>
+        <button className="btn-primary" onClick={load}> Refresh</button>
       </div>
 
       {/* ══ SUMMARY BANNER ═══════════════════════════════════════ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
         {[
           {
-            label: 'Critical Alerts', value: critical.length, icon: '🔴',
+            label: 'Critical Alerts', value: critical.length, icon: '',
             bg: 'linear-gradient(135deg,#ef4444,#dc2626)', shadow: '#ef444440',
           },
           {
-            label: 'Low Stock Warnings', value: warnings.length, icon: '⚠️',
+            label: 'Low Stock Warnings', value: warnings.length, icon: '',
             bg: 'linear-gradient(135deg,#f59e0b,#d97706)', shadow: '#f59e0b40',
           },
           {
-            label: 'Total Active Alerts', value: visible.length, icon: '🔔',
+            label: 'Total Active Alerts', value: visible.length, icon: '',
             bg: visible.length === 0
               ? 'linear-gradient(135deg,#22c55e,#16a34a)'
               : 'linear-gradient(135deg,#7c3aed,#6d28d9)',

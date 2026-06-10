@@ -126,3 +126,87 @@ INSERT IGNORE INTO `items` (`name`, `unit`, `min_stock`, `description`) VALUES
   ('Color Paint',    'gallons',10, 'Exterior weather-proof paint'),
   ('Masonry Nail',   'boxes',  30, '4-inch masonry nails box/1kg'),
   ('Iron Sheet',     'pieces', 10, 'Gauge 30 iron roofing sheets');
+
+-- =============================================================
+-- 6. DEMAND METRICS (AI Forecasting)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `demand_metrics` (
+  `id`              INT(11)  NOT NULL AUTO_INCREMENT,
+  `item_id`         INT(11)  NOT NULL,
+  `metric_date`     DATE     NOT NULL,
+  `total_quantity_in`  INT(11)  NOT NULL DEFAULT 0,
+  `total_quantity_out` INT(11)  NOT NULL DEFAULT 0,
+  `net_change`      INT(11)  NOT NULL DEFAULT 0,
+  `avg_price`       DECIMAL(10,2) DEFAULT 0.00,
+  `created_at`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_item_date` (`item_id`, `metric_date`),
+  KEY `idx_item_id_dm` (`item_id`),
+  KEY `idx_metric_date` (`metric_date`),
+  CONSTRAINT `fk_dm_item` FOREIGN KEY (`item_id`) REFERENCES `items`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- =============================================================
+-- 7. FORECAST PREDICTIONS (AI Model Output)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `forecast_predictions` (
+  `id`                      INT(11)  NOT NULL AUTO_INCREMENT,
+  `item_id`                 INT(11)  NOT NULL,
+  `forecast_date`           DATE     NOT NULL,
+  `predicted_quantity`      FLOAT    NOT NULL,
+  `confidence_lower_bound`  FLOAT    NOT NULL,
+  `confidence_upper_bound`  FLOAT    NOT NULL,
+  `confidence_level`        DECIMAL(5,2) NOT NULL DEFAULT 95.00,
+  `model_type`              VARCHAR(50)  DEFAULT 'Prophet',
+  `accuracy_score`          DECIMAL(5,3) DEFAULT NULL,
+  `created_at`              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_forecast` (`item_id`, `forecast_date`),
+  KEY `idx_item_id_fp` (`item_id`),
+  KEY `idx_forecast_date` (`forecast_date`),
+  CONSTRAINT `fk_fp_item` FOREIGN KEY (`item_id`) REFERENCES `items`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- =============================================================
+-- 8. INVENTORY TRENDS (Pattern Analysis)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `inventory_trends` (
+  `id`               INT(11)  NOT NULL AUTO_INCREMENT,
+  `item_id`          INT(11)  NOT NULL,
+  `trend_type`       ENUM('daily','weekly','monthly','seasonal') NOT NULL,
+  `period`           VARCHAR(50)  NOT NULL,
+  `avg_quantity`     FLOAT    NOT NULL,
+  `volatility`       FLOAT    DEFAULT 0.0,
+  `peak_value`       INT(11)  DEFAULT NULL,
+  `lowest_value`     INT(11)  DEFAULT NULL,
+  `trend_direction`  ENUM('increasing','decreasing','stable') DEFAULT 'stable',
+  `last_updated`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_trend` (`item_id`, `trend_type`, `period`),
+  KEY `idx_item_id_it` (`item_id`),
+  CONSTRAINT `fk_it_item` FOREIGN KEY (`item_id`) REFERENCES `items`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- =============================================================
+-- 9. AUTO-REORDER RECOMMENDATIONS
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `reorder_recommendations` (
+  `id`                    INT(11)  NOT NULL AUTO_INCREMENT,
+  `item_id`               INT(11)  NOT NULL,
+  `recommended_quantity`  INT(11)  NOT NULL,
+  `supplier_id`           INT(11)  DEFAULT NULL,
+  `reason`                VARCHAR(200) NOT NULL,
+  `confidence_score`      DECIMAL(5,2) NOT NULL,
+  `status`                ENUM('pending','approved','ordered','completed') DEFAULT 'pending',
+  `created_at`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `approved_at`           TIMESTAMP NULL DEFAULT NULL,
+  `approval_user_id`      INT(11)  DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_item_id_rr` (`item_id`),
+  KEY `idx_supplier_id_rr` (`supplier_id`),
+  KEY `idx_status_rr` (`status`),
+  CONSTRAINT `fk_rr_item` FOREIGN KEY (`item_id`) REFERENCES `items`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rr_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers`(`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_rr_user` FOREIGN KEY (`approval_user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

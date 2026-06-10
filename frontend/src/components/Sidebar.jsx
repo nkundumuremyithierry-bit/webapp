@@ -9,16 +9,16 @@ import toast from 'react-hot-toast';
 //   staff       → Dashboard, Inventory, StockIn, StockOut, Alerts, Report, Settings
 //   storekeeper → Dashboard, StockIn, StockOut, Alerts, Settings
 const allNavItems = [
-  { to: '/',          label: 'Dashboard',  icon: '🏠', roles: ['admin','manager','staff','storekeeper'] },
-  { to: '/inventory', label: 'Inventory',  icon: '📋', roles: ['admin','manager','staff','storekeeper'] },
-  { to: '/stockin',   label: 'Stock In',   icon: '📦', roles: ['admin','manager','staff','storekeeper'] },
-  { to: '/stockout',  label: 'Stock Out',  icon: '📤', roles: ['admin','manager','staff','storekeeper'] },
-  { to: '/alerts',    label: 'Alerts',     icon: '⚠️', roles: ['admin','manager','staff','storekeeper'] },
-  { to: '/report',    label: 'Report',     icon: '📊', roles: ['admin','manager','staff'] },
-  { to: '/items',     label: 'Products',   icon: '🏷️', roles: ['admin','manager'] },
-  { to: '/suppliers', label: 'Suppliers',  icon: '🏢', roles: ['admin','manager'] },
-  { to: '/users',     label: 'Users',      icon: '👥', roles: ['admin'] },
-  { to: '/settings',  label: 'Settings',   icon: '⚙️', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/',          label: 'Dashboard',  icon: '', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/inventory', label: 'Inventory',  icon: '', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/stockin',   label: 'Stock In',   icon: '', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/stockout',  label: 'Stock Out',  icon: '', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/alerts',    label: 'Alerts',     icon: '', roles: ['admin','manager','staff','storekeeper'] },
+  { to: '/items',     label: 'Products',   icon: '', roles: ['admin','manager'] },
+  { to: '/suppliers', label: 'Suppliers',  icon: '', roles: ['admin','manager'] },
+  { to: '/users',     label: 'Users',      icon: '', roles: ['admin'] },
+  { to: '/report',    label: 'Report',     icon: '', roles: ['admin','manager','staff'] },
+  { to: '/settings',  label: 'Settings',   icon: '', roles: ['admin','manager','staff','storekeeper'] },
 ];
 
 const roleColors = {
@@ -88,7 +88,7 @@ const Sidebar = ({ open, onClose }) => {
               <p className="user-role" style={{ color: roleColor }}>{roleLabel}</p>
             </div>
           </div>
-          <button className="btn-logout" onClick={handleLogout}>⏻ Logout</button>
+          <button className="btn-logout" onClick={handleLogout}> Logout</button>
         </div>
       </aside>
     </>

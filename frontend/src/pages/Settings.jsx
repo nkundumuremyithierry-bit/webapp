@@ -59,7 +59,7 @@ export default function Settings() {
     <button type="button" onClick={() => setShowPwd(s => ({ ...s, [field]: !s[field] }))}
       style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
         background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: 16 }}>
-      {showPwd[field] ? '👁️' : '🙈'}
+      {showPwd[field] ? '' : ''}
     </button>
   );
 
@@ -69,7 +69,7 @@ export default function Settings() {
       {/* ══ HEADER ══════════════════════════════════════════════ */}
       <div className="page-header" style={{ marginBottom: 32 }}>
         <div>
-          <h1 className="page-title">⚙️ Settings</h1>
+          <h1 className="page-title"> Settings</h1>
           <p className="page-sub">Manage your account and system preferences</p>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function Settings() {
       </Section>
 
       {/* ══ CHANGE PASSWORD ══════════════════════════════════════ */}
-      <Section icon="🔐" title="Change Password" subtitle="Update your account password">
+      <Section icon="" title="Change Password" subtitle="Update your account password">
         <form onSubmit={handlePwdChange}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px,1fr))', gap: 16, maxWidth: 700 }}>
             {[
@@ -139,22 +139,22 @@ export default function Settings() {
           <div style={{ marginTop: 20 }}>
             <button type="submit" className="um-btn-submit" disabled={pwdLoading}
               style={{ background: 'linear-gradient(135deg,#3b82f6,#2563eb)', padding: '12px 28px' }}>
-              {pwdLoading ? <><span className="btn-spinner" /> Saving…</> : '🔐 Update Password'}
+              {pwdLoading ? <><span className="btn-spinner" /> Saving…</> : ' Update Password'}
             </button>
           </div>
         </form>
       </Section>
 
       {/* ══ SYSTEM INFO ══════════════════════════════════════════ */}
-      <Section icon="🏢" title="System Information" subtitle="About DAB Enterprise SMS">
+      <Section icon="" title="System Information" subtitle="About DAB Enterprise SMS">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 14 }}>
           {[
-            { icon: '🏷️', label: 'Application',  value: 'DAB Enterprise SMS' },
-            { icon: '📦', label: 'Version',       value: 'v1.0.0' },
-            { icon: '⚛️', label: 'Frontend',      value: 'React + Vite' },
-            { icon: '🟢', label: 'Backend',       value: 'Node.js + Express' },
-            { icon: '🗄️', label: 'Database',      value: 'MySQL (MariaDB)' },
-            { icon: '📍', label: 'Location',      value: 'Kigali, Rwanda' },
+            { icon: '', label: 'Application',  value: 'DAB Enterprise SMS' },
+            { icon: '', label: 'Version',       value: 'v1.0.0' },
+            { icon: '', label: 'Frontend',      value: 'React + Vite' },
+            { icon: '', label: 'Backend',       value: 'Node.js + Express' },
+            { icon: '', label: 'Database',      value: 'MySQL (MariaDB)' },
+            { icon: '', label: 'Location',      value: 'Kigali, Rwanda' },
           ].map(s => (
             <div key={s.label} style={{
               display: 'flex', alignItems: 'center', gap: 12,
@@ -183,7 +183,7 @@ export default function Settings() {
           boxShadow: '0 2px 12px #ef444412',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ fontSize: 24 }}>⚠️</span>
+            <span style={{ fontSize: 24 }}></span>
             <div>
               <h3 style={{ margin: 0, color: '#991b1b', fontWeight: 700 }}>Admin Zone</h3>
               <p style={{ margin: 0, fontSize: 13, color: '#b91c1c' }}>Actions reserved for administrators only</p>

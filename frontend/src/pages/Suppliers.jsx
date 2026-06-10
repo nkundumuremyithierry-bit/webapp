@@ -38,7 +38,7 @@ function SupplierModal({ mode, initial, onClose, onSaved }) {
       <div className={`um-modal ${visible ? 'um-modal--in' : ''}`}>
         <div className="um-modal-header"
           style={{ background: isEdit ? 'linear-gradient(135deg,#7c3aed,#5b21b6)' : 'linear-gradient(135deg,#0f172a,#1e3a5f)' }}>
-          <div className="um-modal-icon">{isEdit ? '✏️' : '🏢'}</div>
+          <div className="um-modal-icon">{isEdit ? '' : ''}</div>
           <div>
             <h2 className="um-modal-title">{isEdit ? 'Edit Supplier' : 'Add New Supplier'}</h2>
             <p className="um-modal-sub">{isEdit ? `Editing: ${initial.name}` : 'Add a new supplier to the system'}</p>
@@ -66,7 +66,7 @@ function SupplierModal({ mode, initial, onClose, onSaved }) {
             <button type="button" className="um-btn-cancel" onClick={close}>Cancel</button>
             <button type="submit" className="um-btn-submit" disabled={loading}
               style={{ background: isEdit ? 'linear-gradient(135deg,#7c3aed,#5b21b6)' : 'linear-gradient(135deg,#0f172a,#1e3a5f)' }}>
-              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? '✅ Save Changes' : '✅ Add Supplier'}
+              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? ' Save Changes' : ' Add Supplier'}
             </button>
           </div>
         </form>
@@ -108,7 +108,7 @@ export default function Suppliers() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">🏢 Suppliers</h1>
+          <h1 className="page-title"> Suppliers</h1>
           <p className="page-sub">Manage supplier information and contacts</p>
         </div>
         {isAdmin && (
@@ -121,9 +121,9 @@ export default function Suppliers() {
       {/* Summary */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px,1fr))', gap: 16, marginBottom: 24 }}>
         {[
-          { label: 'Total Suppliers', value: suppliers.length,       icon: '🏢', color: '#7c3aed' },
-          { label: 'With Email',      value: suppliers.filter(s => s.email).length,   icon: '📧', color: '#3b82f6' },
-          { label: 'With Phone',      value: suppliers.filter(s => s.phone).length,   icon: '📞', color: '#059669' },
+          { label: 'Total Suppliers', value: suppliers.length,       icon: '', color: '#7c3aed' },
+          { label: 'With Email',      value: suppliers.filter(s => s.email).length,   icon: '', color: '#3b82f6' },
+          { label: 'With Phone',      value: suppliers.filter(s => s.phone).length,   icon: '', color: '#059669' },
         ].map(c => (
           <div key={c.label} style={{
             background: '#fff', borderRadius: 16, padding: '20px', border: '1px solid #e2e8f0',
@@ -145,7 +145,7 @@ export default function Suppliers() {
       {/* Supplier Cards grid */}
       {filtered.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '48px 32px' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🏢</div>
+          <div style={{ fontSize: 48, marginBottom: 12 }}></div>
           <p style={{ color: '#64748b', fontSize: 15 }}>
             {search ? 'No suppliers match your search.' : 'No suppliers added yet.'}
           </p>
@@ -164,7 +164,7 @@ export default function Suppliers() {
               <span className="badge-blue">{filtered.length}</span>
             </div>
             <div className="search-wrap">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"></span>
               <input className="search-input" type="text" placeholder="Search supplier or contact…"
                 value={search} onChange={e => setSearch(e.target.value)} />
               {search && <button className="search-clear" onClick={() => setSearch('')}>✕</button>}
@@ -191,7 +191,7 @@ export default function Suppliers() {
                           background: 'linear-gradient(135deg,#7c3aed22,#5b21b622)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontSize: 18,
-                        }}>🏢</div>
+                        }}></div>
                         <span style={{ fontWeight: 700, color: '#0f172a' }}>{s.name}</span>
                       </div>
                     </td>
@@ -220,7 +220,7 @@ export default function Suppliers() {
                       <td className="action-cell">
                         <button className="btn-edit-icon" title="Edit supplier"
                           onClick={() => setModal({ mode: 'edit', supplier: { id: s.id, name: s.name, contact_person: s.contact_person || '', phone: s.phone || '', email: s.email || '', address: s.address || '' } })}>
-                          ✏️
+                          
                         </button>
                         <button className="btn-delete" title="Delete supplier" onClick={() => handleDelete(s.id)}>🗑️</button>
                       </td>

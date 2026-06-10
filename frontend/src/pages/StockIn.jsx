@@ -202,7 +202,7 @@ const StockIn = () => {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">📦 Stock In</h1>
+          <h1 className="page-title"> Stock In</h1>
           <p className="page-sub">Record and manage items received into the store</p>
         </div>
         <button id="add-stockin-btn" className="btn-primary"

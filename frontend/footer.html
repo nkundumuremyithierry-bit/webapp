@@ -1,0 +1,664 @@
+<!-- Standalone HTML Footer Component - DAB Enterprise Store Management System -->
+<!-- This footer showcases all features and serves as the comprehensive footer for the full-stack application -->
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  footer {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    color: #e2e8f0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .footer-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    padding: 60px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-section {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .footer-section:nth-child(1) { animation-delay: 0.1s; }
+  .footer-section:nth-child(2) { animation-delay: 0.2s; }
+  .footer-section:nth-child(3) { animation-delay: 0.3s; }
+  .footer-section:nth-child(4) { animation-delay: 0.4s; }
+  .footer-section:nth-child(5) { animation-delay: 0.5s; }
+  .footer-section:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+
+  .footer-brand {
+    grid-column: 1;
+  }
+
+  .footer-logo h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-tagline {
+    font-size: 13px;
+    color: #cbd5e0;
+    margin: 0 0 15px 0;
+    font-weight: 500;
+  }
+
+  .footer-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #a0aec0;
+    margin-bottom: 25px;
+    max-width: 300px;
+  }
+
+  .footer-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #cbd5e0;
+    transition: color 0.3s ease;
+  }
+
+  .contact-item:hover {
+    color: #63b3ed;
+  }
+
+  .footer-section h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #4299e1;
+    display: inline-block;
+  }
+
+  .footer-section h5 {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #cbd5e0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    opacity: 0.8;
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 20px;
+  }
+
+  .link-category {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: #cbd5e0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    padding-left: 12px;
+  }
+
+  .footer-links a::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: #63b3ed;
+    padding-left: 18px;
+  }
+
+  .footer-links a:hover::before {
+    opacity: 1;
+  }
+
+  .footer-middle {
+    background: rgba(66, 153, 225, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px 0;
+  }
+
+  .footer-middle-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .newsletter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .newsletter-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    border: none;
+  }
+
+  .newsletter-section p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5e0;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    color: #e2e8f0;
+    font-size: 13px;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-form input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+  }
+
+  .newsletter-form button {
+    padding: 12px 24px;
+    background: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .newsletter-form button:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(66, 153, 225, 0.3);
+  }
+
+  .social-section {
+    text-align: right;
+  }
+
+  .social-section h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    text-align: right;
+    border: none;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(66, 153, 225, 0.1);
+    border: 1px solid rgba(66, 153, 225, 0.3);
+    border-radius: 50%;
+    color: #cbd5e0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 20px;
+  }
+
+  .social-links a:hover {
+    background: #4299e1;
+    border-color: #4299e1;
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(66, 153, 225, 0.3);
+  }
+
+  .footer-bottom {
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-bottom-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .copyright, .footer-version, .footer-location {
+    font-size: 13px;
+    color: #cbd5e0;
+    margin: 0;
+  }
+
+  .copyright strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .footer-version, .footer-location {
+    font-size: 12px;
+    color: #a0aec0;
+  }
+
+  .footer-credits {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-credits p {
+    font-size: 13px;
+    color: #a0aec0;
+    margin: 0 0 8px 0;
+  }
+
+  .heart {
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+  }
+
+  .tech-stack {
+    font-size: 12px !important;
+    color: #63b3ed !important;
+  }
+
+  .tech-stack strong {
+    color: #4299e1;
+  }
+
+  .footer-utilities {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-utilities-list {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .footer-utilities-list a {
+    font-size: 12px;
+    color: #cbd5e0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 500;
+  }
+
+  .footer-utilities-list a:hover {
+    color: #63b3ed;
+  }
+
+  @media (max-width: 1024px) {
+    .footer-content-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+
+    .footer-middle-content {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .social-section {
+      text-align: left;
+    }
+
+    .social-links {
+      justify-content: flex-start;
+    }
+
+    .social-section h4 {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-content-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 40px 0;
+    }
+
+    .footer-section h4 {
+      font-size: 14px;
+    }
+
+    .footer-links {
+      grid-template-columns: 1fr;
+    }
+
+    .newsletter-form {
+      flex-direction: column;
+    }
+
+    .newsletter-form button {
+      width: 100%;
+    }
+
+    .footer-bottom-content {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .footer-utilities-list {
+      gap: 15px;
+    }
+
+    .footer-utilities-list a {
+      font-size: 11px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-logo h3 {
+      font-size: 20px;
+    }
+
+    .footer-section h4 {
+      font-size: 13px;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+    }
+
+    .social-links {
+      gap: 12px;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+    }
+
+    .newsletter-form {
+      gap: 6px;
+    }
+
+    .newsletter-form input, .newsletter-form button {
+      font-size: 12px;
+      padding: 10px 12px;
+    }
+  }
+</style>
+
+<footer>
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-content-grid">
+      
+      <!-- Brand Section -->
+      <div class="footer-section footer-brand">
+        <div class="footer-logo">
+          <h3>🏢 DAB Enterprise</h3>
+          <p class="brand-tagline">AI-Powered Store Management System</p>
+        </div>
+        <p class="footer-description">
+          Advanced inventory management system with intelligent demand forecasting for building materials and retail operations across Rwanda.
+        </p>
+        <div class="footer-contact-info">
+          <div class="contact-item">📍 Kigali, Rwanda</div>
+          <div class="contact-item">📞 +250 (0) 788 000 000</div>
+          <div class="contact-item">✉️ info@dab-enterprise.rw</div>
+        </div>
+      </div>
+
+      <!-- Product Features -->
+      <div class="footer-section">
+        <h4>📦 PRODUCT</h4>
+        <div class="footer-links">
+          <div class="link-category">
+            <h5>Core Features</h5>
+            <ul>
+              <li><a href="#inventory-management">Inventory Management</a></li>
+              <li><a href="#stock-tracking">Stock Tracking</a></li>
+              <li><a href="#supplier-management">Supplier Management</a></li>
+              <li><a href="#user-management">User Management & Roles</a></li>
+              <li><a href="#reporting">Real-time Reporting</a></li>
+            </ul>
+          </div>
+          <div class="link-category">
+            <h5>AI & Analytics</h5>
+            <ul>
+              <li><a href="#demand-forecasting">Demand Forecasting</a></li>
+              <li><a href="#trend-analysis">Trend Analysis</a></li>
+              <li><a href="#reorder-recommendations">Smart Reorder Recommendations</a></li>
+              <li><a href="#stock-optimization">Stock Level Optimization</a></li>
+              <li><a href="#predictive-analytics">Predictive Analytics</a></li>
+            </ul>
+          </div>
+          <div class="link-category">
+            <h5>Advanced</h5>
+            <ul>
+              <li><a href="#multi-warehouse">Multi-Warehouse Support</a></li>
+              <li><a href="#mobile-app">Mobile Application</a></li>
+              <li><a href="#integrations">Third-party Integrations</a></li>
+              <li><a href="#api">REST API</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="footer-section">
+        <h4>🏛️ COMPANY</h4>
+        <ul class="footer-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#team">Our Team</a></li>
+          <li><a href="#careers">Careers</a></li>
+          <li><a href="#blog">Blog & News</a></li>
+          <li><a href="#press">Press Kit</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#partners">Partners & Suppliers</a></li>
+          <li><a href="#testimonials">Customer Testimonials</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div class="footer-section">
+        <h4>📚 RESOURCES</h4>
+        <div class="footer-links">
+          <div class="link-category">
+            <h5>Documentation</h5>
+            <ul>
+              <li><a href="#docs">User Guide</a></li>
+              <li><a href="#api-docs">API Documentation</a></li>
+              <li><a href="#forecasting-guide">Forecasting Guide</a></li>
+              <li><a href="#installation">Installation Guide</a></li>
+              <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+          </div>
+          <div class="link-category">
+            <h5>Support & Learning</h5>
+            <ul>
+              <li><a href="#support">Support Center</a></li>
+              <li><a href="#tutorials">Video Tutorials</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><a href="#community">Community Forum</a></li>
+              <li><a href="#webinars">Webinars & Events</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal & Compliance -->
+      <div class="footer-section">
+        <h4>⚖️ LEGAL & COMPLIANCE</h4>
+        <div class="footer-links">
+          <div class="link-category">
+            <h5>Policies</h5>
+            <ul>
+              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><a href="#terms">Terms of Service</a></li>
+              <li><a href="#cookie">Cookie Policy</a></li>
+              <li><a href="#disclaimer">Disclaimer</a></li>
+            </ul>
+          </div>
+          <div class="link-category">
+            <h5>Compliance</h5>
+            <ul>
+              <li><a href="#gdpr">GDPR Compliance</a></li>
+              <li><a href="#security">Security Standards</a></li>
+              <li><a href="#data-protection">Data Protection</a></li>
+              <li><a href="#accessibility">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security & Performance -->
+      <div class="footer-section">
+        <h4>🔒 SECURITY & PERFORMANCE</h4>
+        <ul class="footer-links">
+          <li><a href="#security-features">Security Features</a></li>
+          <li><a href="#system-status">System Status</a></li>
+          <li><a href="#uptime">Uptime Monitor</a></li>
+          <li><a href="#disaster-recovery">Disaster Recovery</a></li>
+          <li><a href="#performance">Performance Metrics</a></li>
+          <li><a href="#certifications">Certifications</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter & Social -->
+  <div class="footer-middle">
+    <div class="footer-container">
+      <div class="footer-middle-content">
+        <div class="newsletter-section">
+          <h4>📧 Stay Updated</h4>
+          <p>Subscribe to get latest features, updates, and best practices</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Enter your email" required />
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+
+        <div class="social-section">
+          <h4>Follow Us</h4>
+          <div class="social-links">
+            <a href="#facebook" title="Facebook">f</a>
+            <a href="#twitter" title="Twitter">𝕏</a>
+            <a href="#linkedin" title="LinkedIn">in</a>
+            <a href="#instagram" title="Instagram">📷</a>
+            <a href="#email" title="Email">✉️</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-content">
+        <p class="copyright">© 2026 <strong>DAB Enterprise Ltd</strong>. All rights reserved.</p>
+        <p class="footer-version">Store Management System v2.0 + AI Forecasting v1.0</p>
+        <p class="footer-location">Based in Kigali, Rwanda 🇷🇼</p>
+      </div>
+
+      <div class="footer-credits">
+        <p>Built with <span class="heart">❤️</span> for efficient inventory management</p>
+        <p class="tech-stack"><strong>Tech Stack:</strong> React | Node.js | MySQL | Python | Prophet ML</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Utilities -->
+  <div class="footer-utilities">
+    <div class="footer-container">
+      <div class="footer-utilities-list">
+        <a href="#sitemap">Sitemap</a>
+        <a href="#rss">RSS Feed</a>
+        <a href="#changelog">Changelog</a>
+        <a href="#status">Status Page</a>
+        <a href="#feedback">Send Feedback</a>
+      </div>
+    </div>
+  </div>
+</footer>

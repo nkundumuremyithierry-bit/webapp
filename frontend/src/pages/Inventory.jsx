@@ -3,9 +3,9 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 
 const STATUS_META = {
-  ok:  { label: '✅ In Stock',    cls: 'status-ok',  bg: '#dcfce7', color: '#16a34a' },
-  low: { label: '⚠️ Low Stock',  cls: 'status-low', bg: '#fef9c3', color: '#ca8a04' },
-  out: { label: '🔴 Out of Stock',cls: 'status-out', bg: '#fee2e2', color: '#dc2626' },
+  ok:  { label: ' In Stock',    cls: 'status-ok',  bg: '#dcfce7', color: '#16a34a' },
+  low: { label: ' Low Stock',  cls: 'status-low', bg: '#fef9c3', color: '#ca8a04' },
+  out: { label: ' Out of Stock',cls: 'status-out', bg: '#fee2e2', color: '#dc2626' },
 };
 
 const fmt = n => Number(n ?? 0).toLocaleString();
@@ -74,22 +74,22 @@ export default function Inventory() {
       {/* ══ HEADER ═══════════════════════════════════════════ */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">📋 Inventory</h1>
+          <h1 className="page-title"> Inventory</h1>
           <p className="page-sub">Real-time stock levels for all items · Last updated just now</p>
         </div>
         <button className="btn-primary" onClick={load} style={{ gap: 8 }}>
-          🔄 Refresh
+           Refresh
         </button>
       </div>
 
       {/* ══ SUMMARY CARDS ════════════════════════════════════ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginBottom: 28 }}>
         {[
-          { label: 'Total Items',    value: totalItems,   icon: '📦', bg: 'linear-gradient(135deg,#3b82f6,#2563eb)', shadow: '#3b82f640' },
-          { label: 'In Stock',       value: inStockCount, icon: '✅', bg: 'linear-gradient(135deg,#22c55e,#16a34a)', shadow: '#22c55e40' },
-          { label: 'Low Stock',      value: lowCount,     icon: '⚠️', bg: 'linear-gradient(135deg,#f59e0b,#d97706)', shadow: '#f59e0b40' },
-          { label: 'Out of Stock',   value: outCount,     icon: '🔴', bg: 'linear-gradient(135deg,#ef4444,#dc2626)', shadow: '#ef444440' },
-          { label: 'Total Units',    value: fmt(totalUnits), icon: '🔢', bg: 'linear-gradient(135deg,#7c3aed,#6d28d9)', shadow: '#7c3aed40' },
+          { label: 'Total Items',    value: totalItems,   icon: '', bg: 'linear-gradient(135deg,#3b82f6,#2563eb)', shadow: '#3b82f640' },
+          { label: 'In Stock',       value: inStockCount, icon: '', bg: 'linear-gradient(135deg,#22c55e,#16a34a)', shadow: '#22c55e40' },
+          { label: 'Low Stock',      value: lowCount,     icon: '', bg: 'linear-gradient(135deg,#f59e0b,#d97706)', shadow: '#f59e0b40' },
+          { label: 'Out of Stock',   value: outCount,     icon: '', bg: 'linear-gradient(135deg,#ef4444,#dc2626)', shadow: '#ef444440' },
+          { label: 'Total Units',    value: fmt(totalUnits), icon: '', bg: 'linear-gradient(135deg,#7c3aed,#6d28d9)', shadow: '#7c3aed40' },
         ].map(c => (
           <div key={c.label} style={{
             background: c.bg, borderRadius: 16, padding: '20px 18px',
@@ -118,7 +118,7 @@ export default function Inventory() {
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {/* Search */}
             <div className="search-wrap">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"></span>
               <input
                 className="search-input"
                 type="text"
@@ -135,9 +135,9 @@ export default function Inventory() {
               onChange={e => setFilter(e.target.value)}
             >
               <option value="all">All Status</option>
-              <option value="ok">✅ In Stock</option>
-              <option value="low">⚠️ Low Stock</option>
-              <option value="out">🔴 Out of Stock</option>
+              <option value="ok"> In Stock</option>
+              <option value="low"> Low Stock</option>
+              <option value="out"> Out of Stock</option>
             </select>
           </div>
         </div>
@@ -180,7 +180,7 @@ export default function Inventory() {
                           background: `linear-gradient(135deg, ${sm.color}22, ${sm.color}44)`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontSize: 16, flexShrink: 0,
-                        }}>📦</div>
+                        }}></div>
                         <span className="item-badge">{item.itemname}</span>
                       </div>
                     </td>

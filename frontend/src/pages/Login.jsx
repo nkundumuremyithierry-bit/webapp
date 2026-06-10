@@ -239,7 +239,7 @@ const CreateAccountModal = ({ onClose }) => {
               </button>
             </div>
             {form.confirm && form.password !== form.confirm && (
-              <p className="field-error">⚠ Passwords do not match</p>
+              <p className="field-error"> Passwords do not match</p>
             )}
           </div>
 

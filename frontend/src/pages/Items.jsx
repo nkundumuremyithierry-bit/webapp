@@ -32,7 +32,7 @@ function ItemModal({ mode, initial, onClose, onSaved }) {
       <div className={`um-modal ${visible ? 'um-modal--in' : ''}`}>
         <div className="um-modal-header"
           style={{ background: isEdit ? 'linear-gradient(135deg,#0f4c75,#1b6ca8)' : 'linear-gradient(135deg,#0f172a,#065f46)' }}>
-          <div className="um-modal-icon">{isEdit ? '✏️' : '📦'}</div>
+          <div className="um-modal-icon">{isEdit ? '' : ''}</div>
           <div>
             <h2 className="um-modal-title">{isEdit ? 'Edit Item' : 'Add New Item'}</h2>
             <p className="um-modal-sub">{isEdit ? `Editing: ${initial.name}` : 'Add item to product catalog'}</p>
@@ -65,7 +65,7 @@ function ItemModal({ mode, initial, onClose, onSaved }) {
             <button type="button" className="um-btn-cancel" onClick={close}>Cancel</button>
             <button type="submit" className="um-btn-submit" disabled={loading}
               style={{ background: isEdit ? 'linear-gradient(135deg,#0f4c75,#1b6ca8)' : 'linear-gradient(135deg,#065f46,#059669)' }}>
-              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? '✅ Save Changes' : '✅ Add Item'}
+              {loading ? <><span className="btn-spinner" /> Saving…</> : isEdit ? ' Save Changes' : ' Add Item'}
             </button>
           </div>
         </form>
@@ -105,7 +105,7 @@ export default function Items() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">📦 Product Catalog</h1>
+          <h1 className="page-title"> Product Catalog</h1>
           <p className="page-sub">Manage all items available in the store</p>
         </div>
         {isAdmin && (
@@ -118,7 +118,7 @@ export default function Items() {
       {/* Summary */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px,1fr))', gap: 16, marginBottom: 24 }}>
         {[
-          { label: 'Total Items', value: items.length, icon: '📦', color: '#3b82f6' },
+          { label: 'Total Items', value: items.length, icon: '', color: '#3b82f6' },
           { label: 'Units',       value: [...new Set(items.map(i => i.unit))].length, icon: '📏', color: '#7c3aed' },
           { label: 'Avg Min Stock', value: items.length ? Math.round(items.reduce((s,i) => s + Number(i.min_stock), 0) / items.length) : 0, icon: '⚖️', color: '#059669' },
         ].map(c => (
@@ -147,7 +147,7 @@ export default function Items() {
             <span className="badge-blue">{filtered.length}</span>
           </div>
           <div className="search-wrap">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon"></span>
             <input className="search-input" type="text" placeholder="Search item…"
               value={search} onChange={e => setSearch(e.target.value)} />
             {search && <button className="search-clear" onClick={() => setSearch('')}>✕</button>}
@@ -195,7 +195,7 @@ export default function Items() {
                     <td className="action-cell">
                       <button className="btn-edit-icon" title="Edit item"
                         onClick={() => setModal({ mode: 'edit', item: { id: item.id, name: item.name, unit: item.unit, min_stock: item.min_stock, description: item.description || '' } })}>
-                        ✏️
+                        
                       </button>
                       <button className="btn-delete" title="Delete item" onClick={() => handleDelete(item.id)}>🗑️</button>
                     </td>

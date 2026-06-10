@@ -302,7 +302,7 @@ const Dashboard = () => {
             <strong>{user?.username}</strong>
           </div>
           <h1 className="dash-title">Store Dashboard</h1>
-          <p className="dash-subtitle">📍 DAB Enterprise Ltd · Kigali, Rwanda · {today}</p>
+          <p className="dash-subtitle"> DAB Enterprise Ltd · Kigali, Rwanda · {today}</p>
         </div>
         <div className="dash-hero-badges">
           <div className="hero-badge hero-badge--blue">
